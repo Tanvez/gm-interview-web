@@ -7,12 +7,13 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import numeral from "numeral";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus } from '@fortawesome/free-solid-svg-icons'
 import { EntriesDataTypes } from "../Types";
 import { combineProjects } from "../utils";
+import { GET_ENTRIES } from '../api'
 
 const useStyles = makeStyles({
   table: {
@@ -38,21 +39,6 @@ const useStyles = makeStyles({
   billableHoursRight: { marginLeft: "4px", color: "grey" },
   billableAmount: { fontWeight: 'bold', color:"#474646" }
 });
-
-const GET_ENTRIES = gql`
-  query GetEntries {
-    Entries {
-      client
-      project
-      projectCode
-      firstName
-      lastName
-      hours
-      billable
-      billableRate
-    }
-  }
-`;
 
 export default function BasicTable() {
   const classes = useStyles();
