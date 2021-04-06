@@ -28,10 +28,6 @@ const useStyles = makeStyles({
   }
 });
 
-function createData(name: string, clients: string, hours: number, billableHours: number, billableAmount: number) {
-  return { name, clients, hours, billableHours, billableAmount };
-}
-
 interface Entry {
     client: string;
     project: string;
@@ -40,11 +36,11 @@ interface Entry {
     firstName: string;
     lastName: string;
     billable: boolean;
-    billableRats: number;
+    billableRate: number;
 }
 
 interface EntriesData {
-  entries: Entry[];
+  Entries: Entry[];
 }
 
 const GET_ENTRIES = gql`
@@ -63,13 +59,6 @@ const GET_ENTRIES = gql`
   }
 `;
 
-const rows = [
-  createData('CLOB Rearchitecture', 'Twitri', 208.00, 208.00, 0),
-  createData('Roonder 3.0', 'Roonder Technologies LLC', 66.50, 66.50, 4.3),
-  createData('Business Development', 'Prosaria', 41.00, 41.00, 0),
-  createData('Pharos', 'Olith', 349.50, 0.00, 0)
-];
-
 export default function BasicTable() {
   const classes = useStyles();
   const { loading, data, error } = useQuery<EntriesData>(
@@ -77,8 +66,7 @@ export default function BasicTable() {
   );
   if(loading) return <div>loading</div>
   if(error) return <div>error</div>
-  if(data) return <div>data</div>
-    // const { entries } = data
+    const entries = data && data.Entries ? data.Entries : []
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
@@ -92,20 +80,20 @@ export default function BasicTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
+          {entries.map((row) => (
+            <TableRow key={row.project}>
               <TableCell className={classes.tableCell} component="th" scope="row">
-                {row.name}
+                {row.project}
               </TableCell>
-              <TableCell className={classes.tableCell}>{row.clients}</TableCell>
+              <TableCell className={classes.tableCell}>{row.client}</TableCell>
               <TableCell className={classes.tableCell} align='right'>{row.hours}</TableCell>
               <TableCell align='right'>
                 <div style={{display:'flex', justifyContent: 'flex-end'}}>
-                  <div>{row.billableHours}</div>
-                  <div style={{marginLeft:'4px', color:'grey', minWidth:'46px'}}>{ row.billableHours===0?'(0)$':'(100%)'}</div>
+                  <div>{row.billable?row.hours:0}</div>
+                  <div style={{marginLeft:'4px', color:'grey', minWidth:'46px'}}>{ row.billable?'(100%)':'(0)$'}</div>
                 </div>
               </TableCell>
-              <TableCell align='right'>{row.billableAmount>0?`$${row.billableAmount}`: '-'}</TableCell>
+              <TableCell align='right'>{(row.billable && Number(row.hours)>0)?`$${(Number(row.hours)*  row.billableRate).toFixed(2)}`: '-'}</TableCell>
             </TableRow>
           ))}
         </TableBody>
