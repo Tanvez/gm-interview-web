@@ -9,6 +9,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { useQuery, gql } from "@apollo/client";
 import numeral from "numeral";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMinus } from '@fortawesome/free-solid-svg-icons'
 import { EntriesDataTypes } from "../Types";
 import { combineProjects } from "../utils";
 
@@ -33,7 +35,8 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "flex-end",
   },
-  billableHoursRight: { marginLeft: "4px", color: "grey", minWidth: "46px" },
+  billableHoursRight: { marginLeft: "4px", color: "grey" },
+  billableAmount: { fontWeight: 'bold', color:"#474646" }
 });
 
 const GET_ENTRIES = gql`
@@ -54,6 +57,7 @@ const GET_ENTRIES = gql`
 export default function BasicTable() {
   const classes = useStyles();
   const { loading, data, error } = useQuery<EntriesDataTypes>(GET_ENTRIES);
+  //TODO add better loading error screens
   if (loading) return <div>loading</div>;
   if (error) return <div>error</div>;
   const entries = data && data.Entries ? data.Entries : [];
@@ -89,19 +93,25 @@ export default function BasicTable() {
               </TableCell>
               <TableCell className={classes.tableCell}>{row.client}</TableCell>
               <TableCell className={classes.tableCell} align="right">
-                {Math.floor(row.hours)}
+                {row.hours.toFixed(2)}
               </TableCell>
               <TableCell align="right">
                 <div className={classes.billableHoursLeft}>
                   <div>{Math.floor(row.billableHours)}</div>
                   <div className={classes.billableHoursRight}>
-                    {"%" + Math.floor((row.billableHours / row.hours) * 100)}
+                    {`(%${Math.floor((row.billableHours / row.hours) * 100)})`}
                   </div>
                 </div>
               </TableCell>
-              <TableCell align="right">{`$${numeral(
-                row.billableAmount.toFixed(2)
-              ).format("0,0")}`}</TableCell>
+              <TableCell align="right" className={classes.billableAmount}>
+                {row.billableAmount > 0 ? (
+                  <div>
+                    {`$${numeral(row.billableAmount.toFixed(2)).format("0,0")}`}
+                  </div>
+                ) : (
+                  <FontAwesomeIcon icon={faMinus} />
+                )}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
