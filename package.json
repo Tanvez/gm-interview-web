@@ -51,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@types/numeral": "^2.0.1"
   }
 }
