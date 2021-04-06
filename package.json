@@ -13,6 +13,7 @@
     "@types/node": "^12.20.7",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
+    "env-cmd": "^10.1.0",
     "formik": "^2.2.6",
     "graphql": "^15.5.0",
     "react": "^17.0.2",
@@ -23,7 +24,7 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "env-cmd -f .env.development.local react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
