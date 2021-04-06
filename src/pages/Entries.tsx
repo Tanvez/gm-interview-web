@@ -50,7 +50,7 @@ interface EntriesData {
 const GET_ENTRIES = gql`
   query GetEntries
   {
-    entries{
+    Entries{
       client
       project
       projectCode
@@ -72,10 +72,11 @@ const rows = [
 
 export default function BasicTable() {
   const classes = useStyles();
-  const { loading, data } = useQuery<EntriesData>(
+  const { loading, data, error } = useQuery<EntriesData>(
     GET_ENTRIES
   );
   if(loading) return <div>loading</div>
+  if(error) return <div>error</div>
     // const { entries } = data
   return (
     <TableContainer component={Paper}>
