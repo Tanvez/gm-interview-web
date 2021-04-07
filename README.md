@@ -4,6 +4,7 @@ Getting started
 - using the `.env.example` as a reference, your server will have to be setup before this so you can supply the api url
 ### To run locally
 ```bash
+npm install
 npm start
 ```
 
