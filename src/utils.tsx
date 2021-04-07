@@ -1,5 +1,6 @@
-import { Entry } from "./Types";
-const combineProjects = (entries: any) => {
+import { Entry, FormattedEntriesTypes } from "./Types";
+
+const combineProjects = (entries: Entry[]) => {
   const reduced = entries.reduce(reducer, {});
   let resultArr = [];
   for (const [, value] of Object.entries(reduced)) {
@@ -41,4 +42,19 @@ const reducer = (accumulator: any, currentValue: Entry) => {
   return accumulator;
 };
 
-export { combineProjects };
+const getTotalBillableAmountHours = (
+  formattedEntries: FormattedEntriesTypes[]
+) => {
+  let totalBillableAmount = 0;
+  let totalHours = 0;
+  formattedEntries.forEach((item) => {
+    totalBillableAmount += item.billableAmount;
+    totalHours += item.hours;
+  });
+  return {
+    totalBillableAmount: totalBillableAmount.toFixed(2),
+    totalHours: totalHours.toFixed(2),
+  };
+};
+
+export { combineProjects, getTotalBillableAmountHours };

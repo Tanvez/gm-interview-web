@@ -7,13 +7,10 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { useQuery } from "@apollo/client";
 import numeral from "numeral";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus } from '@fortawesome/free-solid-svg-icons'
-import { EntriesDataTypes } from "../Types";
-import { combineProjects } from "../utils";
-import { GET_ENTRIES } from '../api'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus } from "@fortawesome/free-solid-svg-icons";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
   table: {
@@ -35,19 +32,17 @@ const useStyles = makeStyles({
   billableHoursLeft: {
     display: "flex",
     justifyContent: "flex-end",
+    fontWeight: "bold",
   },
-  billableHoursRight: { marginLeft: "4px", color: "grey" },
-  billableAmount: { fontWeight: 'bold', color:"#474646" }
+  billableHoursRight: { marginLeft: "4px", color: "grey", fontWeight: "bold" },
+  billableAmount: { fontWeight: "bolder", color: "#474646" },
 });
+interface BasicTableProps {
+  formattedEntries: any
+}
 
-export default function BasicTable() {
+const BasicTable: React.FC<BasicTableProps> = ({ formattedEntries }) => {
   const classes = useStyles();
-  const { loading, data, error } = useQuery<EntriesDataTypes>(GET_ENTRIES);
-  //TODO add better loading error screens
-  if (loading) return <div>loading</div>;
-  if (error) return <div>error</div>;
-  const entries = data && data.Entries ? data.Entries : [];
-  const formattedEntries = combineProjects(entries);
 
   return (
     <TableContainer component={Paper}>
@@ -82,18 +77,18 @@ export default function BasicTable() {
                 {row.hours.toFixed(2)}
               </TableCell>
               <TableCell align="right">
-                <div className={classes.billableHoursLeft}>
-                  <div>{Math.floor(row.billableHours)}</div>
-                  <div className={classes.billableHoursRight}>
+                <Typography className={classes.billableHoursLeft}>
+                  <Typography>{Math.floor(row.billableHours)}</Typography>
+                  <Typography className={classes.billableHoursRight}>
                     {`(%${Math.floor((row.billableHours / row.hours) * 100)})`}
-                  </div>
-                </div>
+                  </Typography>
+                </Typography>
               </TableCell>
-              <TableCell align="right" className={classes.billableAmount}>
+              <TableCell align="right">
                 {row.billableAmount > 0 ? (
-                  <div>
-                    {`$${numeral(row.billableAmount.toFixed(2)).format("0,0")}`}
-                  </div>
+                  <Typography className={classes.billableAmount}>
+                    {`$${numeral(row.billableAmount.toFixed(2)).format("0,0.00")}`}
+                  </Typography>
                 ) : (
                   <FontAwesomeIcon icon={faMinus} />
                 )}
@@ -105,3 +100,5 @@ export default function BasicTable() {
     </TableContainer>
   );
 }
+
+export default BasicTable
