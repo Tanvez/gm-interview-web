@@ -2,7 +2,10 @@ Getting started
 
 ### Create a `.env.development.local` 
 - using the `.env.example` as a reference, your server will have to be setup before this so you can supply the api url
-### `npm start`
+### To run locally
+```bash
+npm start
+```
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
